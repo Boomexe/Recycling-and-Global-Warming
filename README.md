@@ -1,6 +1,6 @@
 # Recycling-and-Global-Warming
 
-This is a remaster of the original game both @Boomexe and @Awesomeplayer165 made 2 years ago
+This is a remaster of the original game both [@Boomexe](https://github.com/Boomexe) and [@Awesomeplayer165](https://github.com/Awesomeplayer165) made 2 years ago
 
 *Run "main.py*
 
