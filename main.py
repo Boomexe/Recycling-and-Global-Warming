@@ -1,5 +1,4 @@
 import sys
-from numpy import diff
 import pygame
 from pygame.locals import *
 import random
@@ -17,6 +16,9 @@ canTwoImg = os.path.join(spritesDir,'crushed_can_2.png')
 canThreeImg = os.path.join(spritesDir,'crushed_can_3.png')
 recycleBinImg = os.path.join(spritesDir,'recycle_bin.png')
 foodImg = os.path.join(spritesDir,'unfinished_food_1.png')
+backdropImg = os.path.join(spritesDir, 'backdrop.png')
+
+# backdropImg = pygame.image.load(backdropImg).convert()
 
 trashItemImgs = [canOneImg, canTwoImg, canThreeImg, foodImg]
 
@@ -61,9 +63,9 @@ specialTrashList = []
 buttonList = []
 
 def showText(msg, x, y, color, fontSize):
-    font= pygame.font.SysFont('',fontSize)
-    msg = font.render(msg,False,color)
-    screen.blit(msg,(x,y))
+    font = pygame.font.SysFont('', fontSize)
+    msg  = font.render(msg, False, color)
+    screen.blit(msg, (x,y))
 
 def randomizer(numa, numb):
     return random.randint(numa, numb) == numa
@@ -80,7 +82,7 @@ class character():
     def __init__(self, x, y, image, length, width):
         self.x = x
         self.y = y
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load(image).convert_alpha()
         self.length = length
         self.width = width
         self.sprite = pygame.transform.scale(self.image, (self.length, self.width))
@@ -132,13 +134,9 @@ while running == True:
     fpsClock.tick(fps)
 
     # Drawing
-    screen.fill(black)
+    screen.blit(pygame.image.load(backdropImg).convert(),(0, 0))
 
     if gameStart == True:
-        showText(f'Score: {score}', 0, 0, white, 40)
-        showText(f'Lives: {lives}', 0, 25, white, 40)
-        showText(f'Difficulty: {difficulty}', 0, 50, white, 40)
-        showText(f'Timer: {int(time.perf_counter() - startTimeDisplay)}', 0, 75, white, 40)
 
         for trashItem in trashList:
             trashItem.draw()
@@ -173,13 +171,19 @@ while running == True:
         player.draw()
         player.x = pygame.mouse.get_pos()[0] - player.width
 
+        showText(f'Score: {score}', 0, 0, white, 40)
+        showText(f'Lives: {lives}', 0, 25, white, 40)
+        showText(f'Difficulty: {difficulty}', 0, 50, white, 40)
+        showText(f'Timer: {int(time.perf_counter() - startTimeDisplay)}', 0, 75, white, 40)
+
         if randomizer(1, 40):
-            trashList.append(trashCharacter(random.randint(0, windowWidth - trashSize), 25, random.choice(trashItemImgs), trashSize, trashSize, difficulty))
+            trashList.append(trashCharacter(random.randint(0, windowWidth - trashSize), -trashSize, random.choice(trashItemImgs), trashSize, trashSize, difficulty))
         
         if randomizer(1, 200):
-            specialTrashList.append(trashCharacter(random.randint(0, windowWidth - 100), 25, random.choice(trashItemImgs), int(trashSize/2), int(trashSize/2), difficulty * 2))
+            specialTrashList.append(trashCharacter(random.randint(0, windowWidth - 100), -trashSize, random.choice(trashItemImgs), int(trashSize/2), int(trashSize/2), difficulty * 2))
 
     else:
+        showText('Recycling and Global Warming: REMASTER', 35, 250, white, 50)
         for button in buttonList:
             button.draw()
     
@@ -197,7 +201,7 @@ while running == True:
         startTime = time.time()
     pygame.display.update()
 
-screen.fill(black)
+screen.blit(pygame.image.load(backdropImg).convert(),(0, 0))
 showText(f'You collected {score} pieces of trash.', 50, 350, white, 62)
 showText(f'Time: {int(time.perf_counter() - startTimeDisplay)} seconds', 250, 450, white, 62)
 pygame.mixer.Sound.play(endSound)
